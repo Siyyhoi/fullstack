@@ -1,27 +1,24 @@
+'use client'
+import axios from 'axios';
 import Head from 'next/head'
-
-const products = [
-  {
-    id: 1,
-    name: 'แชมพู สูตรนุ่มลิ้น',
-    price: '$19.99',
-    image: 'https://magicstudio.com/blog/content/images/2023/10/props-product-photography.webp',
-  },
-  {
-    id: 2,
-    name: 'เสื้อยืดตรา หนังเหนียว',
-    price: '$49.99',
-    image: 'https://inwfile.com/s-cx/yg1pby.jpg',
-  },
-  {
-    id: 3,
-    name: 'กางเกง ขาสั่น',
-    price: '$39.99',
-    image: 'https://media.allonline.7eleven.co.th/pdmain/542972-02-allonline-fs.jpg',
-  },
-]
-
+import { useEffect, useState } from 'react'
 export default function Home() {
+
+interface DataType {
+    id : Number;
+    name : String;
+    price : String;
+    image : String;
+}
+const [products, setProducts] = useState<DataType[]>([])
+  useEffect(() => {
+    (async() => {
+        const products = await axios.get('/api/products')
+        if(products.data.data){
+          setProducts(products.data.data)
+        }
+    })()
+  }, [])
   return (
     <>
       <Head>
@@ -46,12 +43,12 @@ export default function Home() {
         </section>
 
         <section className="container mx-auto px-4 py-12">
-          <h3 className="text-2xl font-semibold mb-6">Featured Products</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-black">Featured Products</h3>
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {products.map(product => (
               <div key={product.id} className="bg-white rounded-lg shadow p-4">
                 <img src={product.image} alt={product.name} className="w-full h-64 object-cover rounded" />
-                <h4 className="mt-4 text-lg font-semibold">{product.name}</h4>
+                <h4 className="mt-4 text-lg font-semibold text-black">{product.name}</h4>
                 <p className="text-blue-600 font-bold">{product.price}</p>
               </div>
             ))}
