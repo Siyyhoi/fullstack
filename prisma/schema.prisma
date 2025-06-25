@@ -10,12 +10,22 @@ datasource db {
 }
 
 model Products {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
   description String?
-  category String?
-  price Int
-  image String
+  category    String?
+  price       Int
+  image       String
+}
+
+model User {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  email    String @unique
+  password String
+
+updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 }
 
 

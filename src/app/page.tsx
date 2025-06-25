@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Sinsamuth - Home</title>
+        <title>Gaming - Home</title>
       </Head>
 
       <header className="bg-white shadow-md">
