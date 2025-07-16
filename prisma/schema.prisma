@@ -32,4 +32,4 @@ updatedAt DateTime @updatedAt
 // npx prisma generate
 // npx prisma studio
 // password Kbcz15uITCWAi0IM
-// mongodb+srv://Chonlasit:Kbcz15uITCWAi0IM@ecommerce-lek.4d8pvpe.mongodb.net/
+// DATABASE_URL="mongodb+srv://Chonlasit:Kbcz15uITCWAi0IM@ecommerce-lek.4d8pvpe.mongodb.net/ecommerce-lek"
