@@ -3,6 +3,7 @@ import axios from 'axios';
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { Products } from '@/generated/prisma'
+import Navigation from './components/navigation'
 export default function Home() {
   const [products, setProducts] = useState<Products[]>([])
   useEffect(() => {
@@ -18,17 +19,7 @@ export default function Home() {
       <Head>
         <title>Gaming - Home</title>
       </Head>
-
-      <header className="bg-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-600">Game Store</h1>
-          <nav className="space-x-4">
-            <a href="#" className="text-gray-600 hover:text-blue-500">Home</a>
-            <a href="#" className="text-gray-600 hover:text-blue-500">Shop</a>
-            <a href="#" className="text-gray-600 hover:text-blue-500">Contact</a>
-          </nav>
-        </div>
-      </header>
+      <Navigation />
 
       <main className="bg-gray-50 min-h-screen">
         <section className="bg-blue-100 text-center py-16">

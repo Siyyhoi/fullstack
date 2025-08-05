@@ -1,11 +1,13 @@
 import { prisma } from '@/lib/prisma';
 import { createHash } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import Swal from 'sweetalert2';
+
 
 interface RegisterBody {
-    email: string;
-    password: string;
     username: string;
+    password: string;
+    email: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -13,45 +15,47 @@ export async function POST(req: NextRequest) {
         const body = await req.json() as RegisterBody;
 
         if (!body) return NextResponse.json({
-            massage: 'Body Invalid',
-        })
+            message: 'Body Invalid',
+        }, { status: 400 })
 
-        if (!body.email || !body.password || !body.username) return NextResponse.json({
-            massage: 'Please provide email and password',
-        })
+        if (!body.username || !body.password || !body.email) {
+            return NextResponse.json({
+                message: 'Please provide all required fields',
+            }, { status: 400 })
+        }
         
-
         const hashPassword = createHash('sha256').update(body.password).digest('hex');
         console.log('Hashed Password:', hashPassword);
 
         const user = await prisma.user.findFirst({
             where: {
-                email: body.email
+                username: body.username
             },
         })
 
         if (user) {
             return NextResponse.json({
-                message: 'user is already'
-            });
+                message: 'Username already exists'
+            }, { status: 409 });
         }
 
-        await prisma.user.create ({
+        await prisma.user.create({
             data: {
-                email: body.email,
+                username: body.username,
                 password: hashPassword,
-                username: body.username
+                email: body.email
             },
         })
 
         return NextResponse.json({
             status: 'success',
-        })
+            message: 'User registered successfully'
+        }, { status: 201 })
 
     } catch (error) {
+        console.error('Registration error:', error);
         return NextResponse.json({ 
-            message: 'Error :' + error,
-        });
+            message: 'Internal server error',
+        }, { status: 500 });
     }
-
 }
