@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const data = await prisma.products.findUnique({ where: { id } });
     if (!data) return NextResponse.json({ message: "Not Found" }, { status: 404 });
     return NextResponse.json({ data });
@@ -21,10 +21,10 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { name, description, category, price, image } = body ?? {};
 
@@ -51,10 +51,10 @@ export async function PUT(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     await prisma.products.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error) {
