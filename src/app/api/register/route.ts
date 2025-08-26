@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
         }
         
         const hashPassword = createHash('sha256').update(body.password).digest('hex');
-        console.log('Hashed Password:', hashPassword);
 
         const user = await prisma.user.findFirst({
             where: {

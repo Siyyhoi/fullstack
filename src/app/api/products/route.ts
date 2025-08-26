@@ -13,3 +13,38 @@ export async function GET() {
     );
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { name, description, category, price, image } = body ?? {};
+
+    if (!name || typeof name !== 'string') {
+      return NextResponse.json({ message: 'name is required' }, { status: 400 });
+    }
+    if (price === undefined || Number.isNaN(Number(price))) {
+      return NextResponse.json({ message: 'price must be a number' }, { status: 400 });
+    }
+    if (!image || typeof image !== 'string') {
+      return NextResponse.json({ message: 'image is required' }, { status: 400 });
+    }
+
+    const created = await prisma.products.create({
+      data: {
+        name,
+        description: description ?? null,
+        category: category ?? null,
+        price: Number(price),
+        image,
+      },
+    });
+
+    return NextResponse.json({ data: created }, { status: 201 });
+  } catch (error) {
+    console.error('API Error:', error);
+    return NextResponse.json(
+      { message: 'Internal Server Error', error: String(error) },
+      { status: 500 }
+    );
+  }
+}

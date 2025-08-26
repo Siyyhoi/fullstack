@@ -44,6 +44,7 @@ export default function Navigation() {
         // ล้างข้อมูลผู้ใช้จาก state และ localStorage
         setUser(null);
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
         
         // แสดงข้อความสำเร็จ
         Swal.fire({

@@ -13,15 +13,14 @@ export async function POST(req: NextRequest) {
         const body = await req.json() as LoginBody;
 
         if (!body) return NextResponse.json({
-            massage: 'Body Invalid',
+            message: 'Body Invalid',
         })
 
         if (!body.email || !body.password) return NextResponse.json({
-            massage: 'Please provide email and password',
+            message: 'Please provide email and password',
         })
 
         const hashPassword = createHash('sha256').update(body.password).digest('hex');
-        console.log('Hashed Password:', hashPassword);
 
         const user = await prisma.user.findFirst({
             where: {
@@ -35,6 +34,7 @@ export async function POST(req: NextRequest) {
             });
         }
 
+        // Compare only against stored sha256 hash for security
         if (user.password !== hashPassword) {
             return NextResponse.json({
                 message: 'Email or password is incorrect'
@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
             role: "customer",
         }
 
-        const token = sign(token_obj , process.env.JWT_KEY!, {
+        const jwtSecret = process.env.JWT_SECRET || process.env.JWT_KEY;
+        const token = sign(token_obj , jwtSecret!, {
                 expiresIn: '1h',
             });
 

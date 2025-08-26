@@ -1,1 +1,2 @@
 DATABASE_URL="mongodb+srv://Chonlasit:Kbcz15uITCWAi0IM@ecommerce-lek.4d8pvpe.mongodb.net/ecommerce-lek"
+JWT_SECRET="fdswopgjdspogkdsl[gkegl;'erg'er]"

@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 
-export default function Login({ setIsRegister, onLoginSuccess, setIsOpen }: { setIsRegister: (value: boolean) => void; onLoginSuccess: (user: { username: string }) => void; setIsOpen: (value: boolean) => void }) {
+type LoginSuccessUser = { username: string; token: string };
+
+export default function Login({ setIsRegister, onLoginSuccess, setIsOpen }: { setIsRegister: (value: boolean) => void; onLoginSuccess: (user: LoginSuccessUser) => void; setIsOpen: (value: boolean) => void }) {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,8 +24,8 @@ export default function Login({ setIsRegister, onLoginSuccess, setIsOpen }: { se
                 email,
                 password
             });
-            const result = await res.data;
-            if (res.status === 200) {
+            const result = await res.data as { token?: string; token_obj?: { username?: string }; message?: string };
+            if (res.status === 200 && result.token) {
                 Swal.fire({
                   title: 'สำเร็จ!',
                   text: 'เข้าสู่ระบบเรียบร้อยแล้ว',
@@ -35,10 +37,12 @@ export default function Login({ setIsRegister, onLoginSuccess, setIsOpen }: { se
                   setEmail('');
                   setPassword('');
                   // เรียกใช้ callback เพื่อส่งข้อมูลผู้ใช้กลับไป
-                  const userData = { username: result.username || email };
+                  const userData: LoginSuccessUser = { username: result.token_obj?.username || email, token: result.token! };
                   onLoginSuccess(userData);
                   // บันทึกข้อมูลผู้ใช้ใน localStorage
                   localStorage.setItem('user', JSON.stringify(userData));
+                  localStorage.setItem('token', userData.token);
+
                   // ปิด modal
                   setIsOpen(false);
                 });
